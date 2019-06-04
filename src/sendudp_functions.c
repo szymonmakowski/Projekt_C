@@ -29,7 +29,7 @@
 
 void hexdump(unsigned char *data, unsigned int data_bytes) {
 
-	int bin_p=0;
+	int bin_p = 0;
 
 	while (bin_p < data_bytes) {
 		int j;
@@ -66,6 +66,4 @@ uint16_t checksum(uint8_t *data, unsigned int size) {
 
 	return res;
 }
-
-
 

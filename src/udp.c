@@ -64,24 +64,4 @@ unsigned int build_udp_packet(struct sockaddr_in src_addr,
 	return length;
 }
 
-void send_udp_packet(int raw_sock, struct sockaddr_in src_addr,
-		struct sockaddr_in dst_addr, uint8_t *data, uint8_t type_of_service,
-		uint8_t ttl, unsigned int data_size) {
-	unsigned int packet_size;
-	unsigned int ip_payload_size;
-	uint8_t packet[ETH_DATA_LEN];
 
-	memset(packet, 0, ETH_DATA_LEN);
-	ip_payload_size = build_udp_packet(src_addr, dst_addr,
-			packet + sizeof(struct iphdr), data, data_size);
-
-	packet_size = build_ip_packet(src_addr.sin_addr, dst_addr.sin_addr,
-	IPPROTO_UDP, type_of_service, ttl, packet, packet + sizeof(struct iphdr),
-			ip_payload_size);
-
-	if (sendto(raw_sock, packet, packet_size, 0, (struct sockaddr *) &dst_addr,
-			sizeof(dst_addr)) < 0) {
-		perror("sendto");
-		exit(1);
-	}
-}

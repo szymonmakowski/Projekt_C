@@ -196,13 +196,30 @@ int main(int argc, char *argv[]) {
 		exit(1);
 	}
 
-	printf("[+] Send [%d] UDP datagram(-s)...\n", number_of_packets);
-	for (int i = 0; i < number_of_packets; i++) {
-		send_udp_packet(raw_sock, src_addr, dst_addr, data,
-						type_of_service, ttl, data_size);
-		printf("[+] %s ---> %s\n", srcadr, dstadr);
+	//Add packets to list
+	printf("[+] Add [%d] UDP datagram(-s) to list...\n", number_of_packets);
 
+		dodaj_elementy(packet, packet_size, number_of_packets);
+
+	//Print list
+	printf("[+] Print [%d] element(-s) list...\n", number_of_packets);
+
+	wyswietl(packet_size);
+
+	//Send datagram-s from list
+	printf("[+] Send [%d] UDP datagram(-s) from list...\n", number_of_packets);
+
+	send_udp_packet(raw_sock, src_addr, dst_addr, packet_size);
+
+	printf("[+] %s ---> %s\n", srcadr, dstadr);
+
+	printf("[+] Clear list...\n");
+	//Clear list
+	for (int i = 0;i<number_of_packets;i++) {
+		usun_element(i,number_of_packets);
 	}
+
+
 
 	return 0;
 }
