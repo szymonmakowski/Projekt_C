@@ -20,6 +20,13 @@
 
 #include "SendUDP.h"
 
+typedef struct lw {
+	struct lw *pierwszy;
+	struct lw *nastepny;
+	struct lw *poprzedni;
+	uint8_t dane[ETH_DATA_LEN];
+};
+
 struct lw *nowy = NULL;
 struct lw *pierwszy = NULL;
 struct lw *poprzedni = NULL;
@@ -47,8 +54,20 @@ void dodaj_elementy(uint8_t* packet, unsigned int packet_size, int number_of_pac
 	}
 }
 void wyswietl(unsigned int packet_size) {
-	for (struct lw* tmp = pierwszy; tmp != NULL; tmp = tmp->nastepny)
-		hexdump(tmp->dane, packet_size);
+
+	for (struct lw* tmp = pierwszy; tmp != NULL; tmp = tmp->nastepny) {
+		int bin_p = 0;
+
+		while (bin_p < packet_size) {
+			int j;
+			for (j = 0; j < 8 && bin_p < packet_size; j++) {
+				printf("%02x ", (tmp->dane)[bin_p++]);
+			}
+
+			printf("\n");
+		}
+	}
+
 }
 void usun_element(unsigned int ktory, int number_of_packets) {
 

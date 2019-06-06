@@ -26,6 +26,23 @@
 
 #include "SendUDP.h"
 
+
+uint16_t checksum(uint8_t *data, unsigned int size) {
+	int i;
+	int sum = 0;
+	uint16_t *p = (uint16_t *) data;
+
+	for (i = 0; i < size; i += 2) {
+		sum += *(p++);
+	}
+
+	uint16_t carry = sum >> 16;
+	uint16_t tmp = 0x0000ffff & sum;
+	uint16_t res = ~(tmp + carry);
+
+	return res;
+}
+
 unsigned int build_udp_packet(struct sockaddr_in src_addr,
 		struct sockaddr_in dst_addr, uint8_t *udp_packet, uint8_t *data,
 		unsigned int data_size) {
@@ -63,5 +80,4 @@ unsigned int build_udp_packet(struct sockaddr_in src_addr,
 
 	return length;
 }
-
 

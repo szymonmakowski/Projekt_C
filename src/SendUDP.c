@@ -27,6 +27,7 @@
 #include <net/if.h>
 #include <netinet/ether.h>
 #include <sys/ioctl.h>
+#include <dlfcn.h>
 
 #include "SendUDP.h"
 
@@ -59,6 +60,8 @@ int main(int argc, char *argv[]) {
 	struct sockaddr_in src_addr;
 	struct sockaddr_in dst_addr;
 	struct ifreq ifr;
+
+	//open_sendudp_functions();
 
 	while ((options = getopt(argc, argv, "s:d:p:x:i:n:t:l:m:")) != -1) {
 		switch (options) {
@@ -171,17 +174,29 @@ int main(int argc, char *argv[]) {
 	strcpy((char *) data, sending_data);
 	data_size = strlen(sending_data);
 
+
+
 	printf("[+] Build UDP packet...\n\n");
-	packet_size = build_udp_packet(src_addr, dst_addr, udp_packet, data,
+
+	open_udp();
+	packet_size = buildudp(src_addr, dst_addr, udp_packet, data,
 			data_size);
+	close_udp();
+
 	hexdump(udp_packet, packet_size);
 	printf("\n\n");
 
+
 	printf("[+] Build IP packet...\n\n");
-	packet_size = build_ip_packet(src_addr.sin_addr, dst_addr.sin_addr,
+
+	open_ipv4();
+	packet_size = buildip(src_addr.sin_addr, dst_addr.sin_addr,
 	IPPROTO_UDP, type_of_service, ttl, packet, udp_packet, packet_size);
+	close_ipv4();
+
 	hexdump(packet, packet_size);
 	printf("\n\n");
+
 
 	if ((raw_sock = socket(AF_INET, SOCK_RAW, IPPROTO_RAW)) < 0) {
 		perror("socket");
@@ -196,30 +211,32 @@ int main(int argc, char *argv[]) {
 		exit(1);
 	}
 
+	open_list();
 	//Add packets to list
 	printf("[+] Add [%d] UDP datagram(-s) to list...\n", number_of_packets);
 
-		dodaj_elementy(packet, packet_size, number_of_packets);
+		add_packet(packet, packet_size, number_of_packets);
 
 	//Print list
 	printf("[+] Print [%d] element(-s) list...\n", number_of_packets);
 
-	wyswietl(packet_size);
+	print_packet(packet_size);
 
 	//Send datagram-s from list
 	printf("[+] Send [%d] UDP datagram(-s) from list...\n", number_of_packets);
 
-	send_udp_packet(raw_sock, src_addr, dst_addr, packet_size);
+	sendudp(raw_sock, src_addr, dst_addr, packet_size);
 
 	printf("[+] %s ---> %s\n", srcadr, dstadr);
 
 	printf("[+] Clear list...\n");
 	//Clear list
-	for (int i = 0;i<number_of_packets;i++) {
-		usun_element(i,number_of_packets);
+	for (int i = 1; i < number_of_packets;i++) {
+		delete_packet(i,number_of_packets);
 	}
 
-
+	close_list();
+	//close_sendudp_functions();
 
 	return 0;
 }

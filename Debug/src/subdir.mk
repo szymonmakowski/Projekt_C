@@ -5,6 +5,7 @@
 # Add inputs and outputs from these tool invocations to the build variables 
 C_SRCS += \
 ../src/SendUDP.c \
+../src/dynamic_lib.c \
 ../src/ipv4.c \
 ../src/lista.c \
 ../src/sendudp_functions.c \
@@ -12,6 +13,7 @@ C_SRCS += \
 
 OBJS += \
 ./src/SendUDP.o \
+./src/dynamic_lib.o \
 ./src/ipv4.o \
 ./src/lista.o \
 ./src/sendudp_functions.o \
@@ -19,6 +21,7 @@ OBJS += \
 
 C_DEPS += \
 ./src/SendUDP.d \
+./src/dynamic_lib.d \
 ./src/ipv4.d \
 ./src/lista.d \
 ./src/sendudp_functions.d \
