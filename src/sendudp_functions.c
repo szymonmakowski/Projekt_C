@@ -24,6 +24,7 @@
 #include <net/if.h>
 #include <netinet/ether.h>
 #include <sys/ioctl.h>
+#include <dlfcn.h>
 
 #include "SendUDP.h"
 

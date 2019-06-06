@@ -61,8 +61,7 @@ int main(int argc, char *argv[]) {
 	struct sockaddr_in dst_addr;
 	struct ifreq ifr;
 
-	//open_sendudp_functions();
-
+/********************************GETOPT-pobieranie parametrów z terminala******************************/
 	while ((options = getopt(argc, argv, "s:d:p:x:i:n:t:l:m:")) != -1) {
 		switch (options) {
 		case 's':
@@ -171,6 +170,8 @@ int main(int argc, char *argv[]) {
 		printf("[+] Default data to send \"%s\"...\n\n", sending_data);
 	}
 
+	/**********************************************************************************/
+
 	strcpy((char *) data, sending_data);
 	data_size = strlen(sending_data);
 
@@ -236,7 +237,6 @@ int main(int argc, char *argv[]) {
 	}
 
 	close_list();
-	//close_sendudp_functions();
 
 	return 0;
 }

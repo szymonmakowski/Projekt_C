@@ -22,11 +22,16 @@ struct pseudo_iphdr {
 	uint16_t length;
 };
 
+struct lw {
+	struct lw *pierwszy;
+	struct lw *nastepny;
+	struct lw *poprzedni;
+	uint8_t dane[ETH_DATA_LEN];
+};
+
 //Biblioteki dynamiczne
 void *ipv4, *udp, *list, *sendudp_functions;
 //Wskaźniki na poszczególne funkcje
-//void (*hex)(unsigned char*, unsigned int);
-//int (*validate)(char*);
 void (*sendudp)(int, struct sockaddr_in, struct sockaddr_in, unsigned int);
 void (*add_packet)(uint8_t*, unsigned int, int);
 void (*print_packet)(unsigned int);
@@ -42,33 +47,30 @@ void open_udp();
 void close_udp();
 void open_list();
 void close_list();
-//void open_sendudp_functions();
-//void close_sendudp_functions();
-
+//Deklaracje funkcji ktore są używane jako 'pomocnicze' w programie
 void hexdump(unsigned char *data, unsigned int data_bytes);
 int validate_number(char *number);
 
 
 /*
-void dodaj_elementy(uint8_t*, unsigned int,int);
+ * Tak wyglądają deklaracje funkcji na które wskazują wskaźniki do funkcji zadeklarowane wyżej:
+ *
+void dodaj_elementy(uint8_t*, unsigned int,int); <- add_packet
 
-void wyswietl(unsigned int);
+void wyswietl(unsigned int); <- print_packet
 
-void usun_element(unsigned int,int);
+void usun_element(unsigned int,int); <- delete_packet
 
-int validate_number(char *number);
-
-unsigned int build_udp_packet(struct sockaddr_in src_addr,
+unsigned int build_udp_packet(struct sockaddr_in src_addr,                <-buildudp
 		struct sockaddr_in dst_addr, uint8_t *udp_packet, uint8_t *data,
 		unsigned int data_size);
 
-unsigned int build_ip_packet(struct in_addr src_addr, struct in_addr dst_addr,
+unsigned int build_ip_packet(struct in_addr src_addr, struct in_addr dst_addr,	<-buildip
 		uint8_t protocol, uint8_t type_of_service, uint8_t ttl,
 		uint8_t *ip_packet, uint8_t *data, unsigned int data_size);
 
-void send_udp_packet(int raw_sock, struct sockaddr_in src_addr,
+void send_udp_packet(int raw_sock, struct sockaddr_in src_addr,	<-sendudp
 		struct sockaddr_in dst_addr, unsigned int packet_size);
 
-void hexdump(unsigned char *data, unsigned int data_bytes);
 */
 #endif /* SENDUDP_H_ */

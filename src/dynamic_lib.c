@@ -128,35 +128,3 @@ void close_list() {
 	}
 }
 
-/*void open_sendudp_functions() {
-
-	sendudp_functions = dlopen("/home/szymon/eclipse-workspace/SendUDP/src/sendudp_functions.so",
-		RTLD_LAZY);
-
-		if (!sendudp_functions) {
-			printf("ERROR WHILE OPENING: %s\n", dlerror());
-			exit(1);
-		}
-
-		hex = dlsym(sendudp_functions, "hexdump");
-
-		if (sendudp_functions == NULL) {
-			printf("Function 'hexdump' not found in library");
-		}
-
-		validate= dlsym(sendudp_functions, "validate_number");
-
-		if (sendudp_functions == NULL) {
-			printf("Function 'validate_number' not found in library");
-		}
-}
-
-void close_sendudp_functions() {
-
-	if (dlclose(sendudp_functions)) {
-
-		printf("ERROR WHILE CLOSING: %s", dlerror());
-		exit(1);
-
-	}
-}*/

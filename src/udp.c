@@ -23,10 +23,11 @@
 #include <net/if.h>
 #include <netinet/ether.h>
 #include <sys/ioctl.h>
+#include <dlfcn.h>
 
 #include "SendUDP.h"
 
-
+//Function which calculates checksum of UDP datagram
 uint16_t checksum(uint8_t *data, unsigned int size) {
 	int i;
 	int sum = 0;
@@ -67,6 +68,7 @@ unsigned int build_udp_packet(struct sockaddr_in src_addr,
 	}
 
 	// Calculate checksum with pseudo ip header
+
 	p_iphdr->source_addr = src_addr.sin_addr.s_addr;
 	p_iphdr->dest_addr = dst_addr.sin_addr.s_addr;
 	p_iphdr->zeros = 0;
@@ -75,6 +77,7 @@ unsigned int build_udp_packet(struct sockaddr_in src_addr,
 
 	// Do NOT use udph->len instead of length.
 	// udph->len is in big endian
+
 	memcpy(pseudo_packet + sizeof(struct pseudo_iphdr), udph, length);
 	udph->check = checksum(pseudo_packet, sizeof(struct pseudo_iphdr) + length);
 

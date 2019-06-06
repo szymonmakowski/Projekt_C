@@ -17,19 +17,14 @@
 #include <net/if.h>
 #include <netinet/ether.h>
 #include <sys/ioctl.h>
+#include <dlfcn.h>
 
 #include "SendUDP.h"
-
-typedef struct lw {
-	struct lw *pierwszy;
-	struct lw *nastepny;
-	struct lw *poprzedni;
-	uint8_t dane[ETH_DATA_LEN];
-};
 
 struct lw *nowy = NULL;
 struct lw *pierwszy = NULL;
 struct lw *poprzedni = NULL;
+
 
 void dodaj_elementy(uint8_t* packet, unsigned int packet_size, int number_of_packets) {
 	for (int i = 0; i < number_of_packets; i++) {
