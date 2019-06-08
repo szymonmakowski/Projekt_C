@@ -62,7 +62,7 @@ int main(int argc, char *argv[]) {
 	struct ifreq ifr;
 
 /********************************GETOPT-pobieranie parametrów z terminala******************************/
-	while ((options = getopt(argc, argv, "s:d:p:x:i:n:t:l:m:")) != -1) {
+	while ((options = getopt(argc, argv, "s:d:p:x:i:n:t:l:m:h:")) != -1) {
 		switch (options) {
 		case 's':
 			if (inet_pton(AF_INET, optarg, &(src_addr.sin_addr)) <= 0) {
@@ -131,8 +131,12 @@ int main(int argc, char *argv[]) {
 			sending_data = optarg;
 			data_flag = 1;
 			break;
+		case 'h':
+			printf("-s <source ip adress> -d <destination ip adress> -p <source port> -x <destination port>\n");
+			printf("-i <interface name> -n <number of packets> -t <type of service> -l <time to live>\n");
+			break;
 		case '?':
-			for (opt_number = 0; opt_number < 9; opt_number++) {
+			for (opt_number = 0; opt_number < 10; opt_number++) {
 				if (optopt == opt[opt_number]) {
 					fprintf(stderr, "Option -%c requires an argument.\n",
 							optopt);
