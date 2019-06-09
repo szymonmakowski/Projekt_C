@@ -51,7 +51,7 @@ int main(int argc, char *argv[]) {
 	uint8_t udp_packet[ETH_DATA_LEN];
 	uint8_t data[MAX_DATA_SIZE];
 	char ifName[IFNAMSIZ];
-	char opt[] = { 's', 'd', 'p', 'x', 'i', 'n', 't', 'l', 'm' };
+	char opt[] = { 's', 'd', 'p', 'x', 'i', 'n', 't', 'l', 'm','h' };
 	char *sending_data = "SEND UDP"; // Default data to send
 	char *dstadr = "127.0.0.1"; // Default destination adress
 	char *srcadr = "192.168.1.1"; // Default source adress
@@ -61,8 +61,15 @@ int main(int argc, char *argv[]) {
 	struct sockaddr_in dst_addr;
 	struct ifreq ifr;
 
+	/*********************SOCKET-**********************/
+
+	if ((raw_sock = socket(AF_INET, SOCK_RAW, IPPROTO_RAW)) < 0) {
+		perror("socket");
+		exit(1);
+	}
+
 /********************************GETOPT-pobieranie parametrów z terminala******************************/
-	while ((options = getopt(argc, argv, "s:d:p:x:i:n:t:l:m:h:")) != -1) {
+	while ((options = getopt(argc, argv, "s:d:p:x:i:n:t:l:m:h")) != -1) {
 		switch (options) {
 		case 's':
 			if (inet_pton(AF_INET, optarg, &(src_addr.sin_addr)) <= 0) {
@@ -133,7 +140,8 @@ int main(int argc, char *argv[]) {
 			break;
 		case 'h':
 			printf("-s <source ip adress> -d <destination ip adress> -p <source port> -x <destination port>\n");
-			printf("-i <interface name> -n <number of packets> -t <type of service> -l <time to live>\n");
+			printf("-i <interface name> -n <number of packets> -t <type of service> -l <time to live> -m <message> -h <help>\n");
+			exit(1);
 			break;
 		case '?':
 			for (opt_number = 0; opt_number < 10; opt_number++) {
@@ -202,12 +210,6 @@ int main(int argc, char *argv[]) {
 	hexdump(packet, packet_size);
 	printf("\n\n");
 
-
-	if ((raw_sock = socket(AF_INET, SOCK_RAW, IPPROTO_RAW)) < 0) {
-		perror("socket");
-		exit(1);
-	}
-
 	memset(&ifr, 0, sizeof(ifr));
 	snprintf(ifr.ifr_name, sizeof(ifr.ifr_name), ifName);
 	if (setsockopt(raw_sock, SOL_SOCKET, SO_BINDTODEVICE, (void *) &ifr,
@@ -220,7 +222,7 @@ int main(int argc, char *argv[]) {
 	//Add packets to list
 	printf("[+] Add [%d] UDP datagram(-s) to list...\n", number_of_packets);
 
-		add_packet(packet, packet_size, number_of_packets);
+	add_packet(packet, packet_size, number_of_packets);
 
 	//Print list
 	printf("[+] Print [%d] element(-s) list...\n", number_of_packets);
